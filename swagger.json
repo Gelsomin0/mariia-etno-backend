@@ -1,0 +1,250 @@
+{
+	"swagger": "5.0.0",
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0",
+    "title": "Mariia Etno Shop",
+    "description": "Documentation to API of Mariia Etno Shop"
+  },
+  "consumes": ["application/json", "multipart/form-data"],
+  "produces": ["application/json"],
+  "servers": [{ "url": "https://marria-etno-backend.onrender.com" }],
+	"tags": [
+    {
+      "name": "Authorization",
+      "description": "Endpoints for user authorization and authentication"
+    }
+  ],
+	"paths": {
+		"/api/users/signup": {
+			"post": {
+				"tags": ["Authorization"],
+        "summary": "User registration account",
+				"requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+				"responses": {
+          "201": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request body response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestBodyResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email is already in use",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationEmailInUseResponse"
+                }
+              }
+            }
+          }
+        }
+			}
+		},
+		"/api/users/login": {
+			"post": {
+				"tags": ["Authorization"],
+        "summary": "User log in application account",
+				"requestBody": {
+          "description": "Registration's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+				"responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request body response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestBodyResponse"
+                }
+              }
+            }
+          },
+					"401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"RegistrationRequest": {
+        "type": "object",
+        "requiered": ["email", "password"],
+        "properties": {
+					"username": {
+						"type": "string",
+						"description": "User's name",
+						"example": "Giovanni"
+					},
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password must have some letters, numbers and one special symbol of those: @$!%*?&",
+            "example": "qwe12345!"
+          }
+        }
+      },
+			"RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+						"type": "string",
+						"example": "user account has been registered with success"
+					}
+        }
+      },
+			"BadRequestBodyResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "error message",
+            "example": "Missing fields"
+          }
+        }
+      },
+			"RegistrationEmailInUseResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "error message",
+            "example": "Email is already in use"
+          }
+        }
+      },
+			"NotFoundError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Not found"
+          }
+        }
+      },
+			"UnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "This message will indicate you that both 'email' or 'password' are wrong , as well as one of them",
+            "example": "Email or password is wrong"
+          }
+        }
+      },
+			"LoginRequest": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string",
+						"format": "email"
+					},
+					"password": {
+						"type": "string",
+						"description": "User's password must have some letters, numbers and one special symbol of those: @$!%*?&",
+						"example": "qwe12345!"
+					}
+				}
+			},
+			"LoginResponse": {
+				"type": "object",
+				"properties": {
+					"user": {
+						"type": "object",
+						"properties": {
+							"username": {
+								"type": "string",
+								"example": "Giovanni"
+							},
+							"email": {
+								"type": "string",
+								"format": "email"
+							},
+							"avatarUrl": {
+								"type": "string",
+								"example": "http://site.com/avatar"
+							},
+							"gender": {
+								"type": "string",
+								"example": "male"
+							},
+							"status": {
+								"type": "string",
+								"example": "customer"
+							},
+							"verifiedEmail": {
+								"type": "boolean",
+								"example": "false"
+							}
+						}
+					},
+					"token": {
+						"type": "string",
+						"example": "uerfgh8475tyn4t578y.54o8tyuvbn495vty78n49587vyt.05946m8u7y9586yunvb93468yvbn"
+					}
+				}
+			}
+		},
+		"securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+	}
+}
