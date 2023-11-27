@@ -1,4 +1,5 @@
 {
+  "type": "commonjs",
   "name": "mariia-etno-backend",
   "version": "0.1.0",
   "private": true,
